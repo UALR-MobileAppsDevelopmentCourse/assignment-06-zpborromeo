@@ -38,21 +38,26 @@ public class MainActivity extends AppCompatActivity {
         mainBinding = ActivityListMultiSelectionBinding.inflate(getLayoutInflater());
         setContentView(R.layout.activity_list_multi_selection);
         initComponent();
+
     }
 
     private void initComponent() {
         // TODO 01. Generate the item list to be displayed using the DataGenerator class
         mainDataSource = DataGenerator.getInboxData(this);
-
+        initRecyclerView(findViewById(R.id.MainRecyclerView));
     }
 
     // TODO 03. Do the setup of a new RecyclerView instance to display the item list properly
     private void initRecyclerView(View view) {
 
-        mainAdapter = new AdapterListBasic(this, mainDataSource);
-        mainBinding.MainRecyclerView.setAdapter(mainAdapter);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         mainBinding.MainRecyclerView.setLayoutManager(layoutManager);
+
+        // TODO 09. Create a new instance of the created Adapter class and bind it to the RecyclerView instance created in step 03
+        mainAdapter = new AdapterListBasic(this, mainDataSource);
+
+        mainBinding.MainRecyclerView.setAdapter(mainAdapter);
+
 
         // TODO 05: Invoke the removeItem method
         mainAdapter.setOnItemClickListener(new AdapterListBasic.OnItemClickListener() {
@@ -63,14 +68,14 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // TODO 04. Define the layout of each item in the list
-        // TODO 09. Create a new instance of the created Adapter class and bind it to the RecyclerView instance created in step 03
+
+
         mFAB = findViewById(R.id.fab);
         mFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO 10. Invoke the method created to a new item to the top of the list so it's
-                //  triggered when the user taps the Floating Action Button
-                mainAdapter.addItem(DEFAULT_POS, mainDataSource.get(Tools.getRandomNumberInRange(0, mainDataSource.size()-1)));
+                //TODO 10. Invoke the method created to a new item to the top of the list so it's triggered when the user taps the Floating Action Button
+                mainAdapter.addItem(DEFAULT_POS, mainDataSource.);
             }
         });
     }

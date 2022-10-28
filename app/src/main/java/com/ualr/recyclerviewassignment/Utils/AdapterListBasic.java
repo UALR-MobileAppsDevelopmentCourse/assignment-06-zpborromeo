@@ -1,6 +1,7 @@
 package com.ualr.recyclerviewassignment.Utils;
 
 import android.content.Context;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.ualr.recyclerview.R;
-import com.ualr.recyclerview.model.Item;
-import com.ualr.recyclerview.model.People;
-import com.ualr.recyclerview.model.SectionHeader;
-import com.ualr.recyclerview.utils.Tools;
+
+import com.ualr.recyclerviewassignment.R;
 import com.ualr.recyclerviewassignment.model.Inbox;
 
 import java.util.List;
@@ -47,12 +45,10 @@ public class AdapterListBasic extends RecyclerView.Adapter{
         this.mContext = context;
     }
 
-    // TODO 01: Define the removeItem method
     public void removeItem(int position) {
         if (position >= mInbox.size()){
             return;
         }
-        // TODO 02: Remove the item from the data set
         mInbox.remove(position);
         /**
          * Notify any registered observers that the item previously located at position
@@ -63,9 +59,7 @@ public class AdapterListBasic extends RecyclerView.Adapter{
          * in the data set are still considered up to date and will not be rebound,
          * though their positions may be altered.
          */
-        // TODO 03: Notify the adapter that a item has been removed
         notifyItemRemoved(position);
-
         /**
          * Notify any registered observers that the itemCount items starting at
          * position positionStart have changed. Equivalent to calling
@@ -75,57 +69,28 @@ public class AdapterListBasic extends RecyclerView.Adapter{
          * that any reflection of the data in the given position range is out of date
          * and should be updated. The items in the given range retain the same identity.
          */
-        // TODO 04: Notify the adapter that a set of items has changed
         notifyItemRangeChanged(position, getItemCount());
     }
 
-    // TODO 06: Define the addItem method
     public void addItem(int position, Inbox item) {
-        // TODO 07: Add new item to the data set at the provided position
         mInbox.add(position, item);
-        // TODO 08: Notify the adapter that an item inserted
         notifyItemInserted(position);
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        return this.mInbox.get(position).isSection()? HEADER_VIEW : PERSON_VIEW;
-    }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        RecyclerView.ViewHolder vh = null;
-        View itemView = null;
-
-        switch (viewType) {
-            case (HEADER_VIEW) :
-                itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_section, parent, false);
-                vh = new SectionHeaderViewHolder(itemView);
-                break;
-            case (PERSON_VIEW):
-                itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_people_chat, parent, false);
-                vh = new PersonViewHolder(itemView);
-                break;
-        }
-        return vh;
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_list_multi_selection, parent, false);
+        return new InboxViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
-        Inbox item = mInbox.get(position);
-        if (holder instanceof PersonViewHolder) {
-            PersonViewHolder viewHolder = (PersonViewHolder) holder;
-            People person = (People) item;
-            viewHolder.name.setText(person.getName());
-            Tools.displayImageRound(mContext, viewHolder.image, person.getImage());
-        } else {
-            // Instance of SectionHeaderViewHolder
-            SectionHeaderViewHolder viewHolder = (SectionHeaderViewHolder) holder;
-            SectionHeader section = (SectionHeader) item;
-            viewHolder.label.setText(section.getLabel());
-        }
+        holder.itemView.findViewById(R.id.emailSender).setText(mInbox.get(position).getFrom());
+        holder.itemView.findViewById(R.id.emailTitle).setText(mInbox.get(position).getEmail());
+        holder.itemView.findViewById(R.id.emailContent).setText(mInbox.get(position).getMessage());
+        holder.itemView.findViewById(R.id.emailTimeSent).setText(mInbox.get(position).getDate());
     }
 
     @Override
@@ -133,39 +98,21 @@ public class AdapterListBasic extends RecyclerView.Adapter{
         return this.mInbox.size();
     }
 
-    public class PersonViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public ImageView image;
-        public TextView name;
-        public View lyt_parent;
+    public class InboxViewHolder extends RecyclerView.ViewHolder {
+        TextView mailIcon;
+        TextView mailSender;
+        TextView mailTitle;
+        TextView mailContent;
+        TextView mailTimeSent;
 
-        /**
-         * PersonViewHolder constructor
-         * Retrieves references to the ImageView and the TextView inside the the view provided as input parameter
-         * The adapter later retrieves view references from these properties when it updates the child views with new data
-         *
-         * @param v parent item view reference
-         */
-        public PersonViewHolder(@NonNull View v) {
-            super(v);
-            image = v.findViewById(R.id.image);
-            name = v.findViewById(R.id.name);
-            lyt_parent = v.findViewById(R.id.lyt_parent);
-            lyt_parent.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-            mOnItemClickListener.onItemClick(getLayoutPosition());
-        }
-    }
-
-    public class SectionHeaderViewHolder extends RecyclerView.ViewHolder {
-
-        public TextView label;
-
-        public SectionHeaderViewHolder(@NonNull View itemView) {
+        public InboxViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.label = itemView.findViewById(R.id.title_section);
+
+            mailIcon = itemView.findViewById(R.id.tvIcon);
+            mailSender = itemView.findViewById(R.id.emailSender);
+            mailTitle = itemView.findViewById(R.id.emailTitle);
+            mailContent = itemView.findViewById(R.id.emailContent);
+            mailTimeSent = itemView.findViewById(R.id.emailTitle);
         }
     }
 
