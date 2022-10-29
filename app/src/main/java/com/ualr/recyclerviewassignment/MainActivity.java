@@ -75,7 +75,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //TODO 10. Invoke the method created to a new item to the top of the list so it's triggered when the user taps the Floating Action Button
-                mainAdapter.addItem(DEFAULT_POS, mainDataSource.);
+                // irconde. There is a function in the DataGenerator class you can use for that
+                // getRandomInboxItem
+                //mainAdapter.addItem(DEFAULT_POS, mainDataSource.);
             }
         });
     }

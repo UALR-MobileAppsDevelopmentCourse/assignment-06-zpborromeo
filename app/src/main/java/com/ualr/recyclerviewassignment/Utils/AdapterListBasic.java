@@ -87,10 +87,14 @@ public class AdapterListBasic extends RecyclerView.Adapter{
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
-        holder.itemView.findViewById(R.id.emailSender).setText(mInbox.get(position).getFrom());
-        holder.itemView.findViewById(R.id.emailTitle).setText(mInbox.get(position).getEmail());
-        holder.itemView.findViewById(R.id.emailContent).setText(mInbox.get(position).getMessage());
-        holder.itemView.findViewById(R.id.emailTimeSent).setText(mInbox.get(position).getDate());
+
+        // irconde. To access the different members of the ViewHolder you need to cast it to your specific ViewHolder class (InboxViewHolder)
+        InboxViewHolder vh = (InboxViewHolder) holder;
+        vh.mailSender.setText(mInbox.get(position).getFrom());
+        //holder.itemView.findViewById(R.id.emailSender).setText(mInbox.get(position).getFrom());
+        //holder.itemView.findViewById(R.id.emailTitle).setText(mInbox.get(position).getEmail());
+        //holder.itemView.findViewById(R.id.emailContent).setText(mInbox.get(position).getMessage());
+        //holder.itemView.findViewById(R.id.emailTimeSent).setText(mInbox.get(position).getDate());
     }
 
     @Override
