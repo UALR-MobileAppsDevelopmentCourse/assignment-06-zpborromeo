@@ -1,9 +1,11 @@
 package com.ualr.recyclerviewassignment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -50,12 +52,15 @@ public class MainActivity extends AppCompatActivity {
     // TODO 03. Do the setup of a new RecyclerView instance to display the item list properly
     private void initRecyclerView(View view) {
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false);
         mainBinding.MainRecyclerView.setLayoutManager(layoutManager);
+        mainBinding.MainRecyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this, DividerItemDecoration.VERTICAL));
+
 
         // TODO 09. Create a new instance of the created Adapter class and bind it to the RecyclerView instance created in step 03
-        mainAdapter = new AdapterListBasic(this, mainDataSource);
+        mainAdapter = new AdapterListBasic(MainActivity.this, mainDataSource);
 
+        // TODO 04. Define the layout of each item in the list
         mainBinding.MainRecyclerView.setAdapter(mainAdapter);
 
 
@@ -67,15 +72,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // TODO 04. Define the layout of each item in the list
-
-
         mFAB = findViewById(R.id.fab);
         mFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //TODO 10. Invoke the method created to a new item to the top of the list so it's triggered when the user taps the Floating Action Button
-                mainAdapter.addItem(DEFAULT_POS, mainDataSource.);
+                mainAdapter.addItem(DEFAULT_POS, (Inbox) DataGenerator.getRandomInboxItem(MainActivity.this));
             }
         });
     }

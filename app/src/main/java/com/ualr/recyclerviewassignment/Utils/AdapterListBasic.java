@@ -87,10 +87,12 @@ public class AdapterListBasic extends RecyclerView.Adapter{
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
-        holder.itemView.findViewById(R.id.emailSender).setText(mInbox.get(position).getFrom());
-        holder.itemView.findViewById(R.id.emailTitle).setText(mInbox.get(position).getEmail());
-        holder.itemView.findViewById(R.id.emailContent).setText(mInbox.get(position).getMessage());
-        holder.itemView.findViewById(R.id.emailTimeSent).setText(mInbox.get(position).getDate());
+        InboxViewHolder vh = (InboxViewHolder) holder;
+        vh.mailIcon.setText(mInbox.get(position).getFrom().substring(0,1));
+        vh.mailSender.setText(mInbox.get(position).getFrom());
+        vh.mailTitle.setText(mInbox.get(position).getEmail());
+        vh.mailContent.setText(mInbox.get(position).getMessage());
+        vh.mailTimeSent.setText(mInbox.get(position).getDate());
     }
 
     @Override
@@ -112,7 +114,7 @@ public class AdapterListBasic extends RecyclerView.Adapter{
             mailSender = itemView.findViewById(R.id.emailSender);
             mailTitle = itemView.findViewById(R.id.emailTitle);
             mailContent = itemView.findViewById(R.id.emailContent);
-            mailTimeSent = itemView.findViewById(R.id.emailTitle);
+            mailTimeSent = itemView.findViewById(R.id.emailTimeSent);
         }
     }
 
