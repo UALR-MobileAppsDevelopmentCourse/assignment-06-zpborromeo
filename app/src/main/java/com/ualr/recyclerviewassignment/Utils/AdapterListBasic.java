@@ -32,6 +32,11 @@ public class AdapterListBasic extends RecyclerView.Adapter{
 
     private OnItemClickListener mOnItemClickListener;
 
+    public AdapterListBasic(Context context, List<Inbox> items) {
+        this.mInbox = items;
+        this.mContext = context;
+    }
+
     public interface OnItemClickListener {
         void onItemClick(int position);
     }
@@ -40,43 +45,17 @@ public class AdapterListBasic extends RecyclerView.Adapter{
         this.mOnItemClickListener = mItemClickListener;
     }
 
-    public AdapterListBasic(Context context, List<Inbox> items) {
-        this.mInbox = items;
-        this.mContext = context;
-    }
-
     public void removeItem(int position) {
         if (position >= mInbox.size()){
             return;
         }
         mInbox.remove(position);
-        /**
-         * Notify any registered observers that the item previously located at position
-         * has been removed from the data set. The items previously located at and
-         * after position may now be found at oldPosition - 1.
-         *
-         * This is a structural change event. Representations of other existing items
-         * in the data set are still considered up to date and will not be rebound,
-         * though their positions may be altered.
-         */
-        notifyItemRemoved(position);
-        /**
-         * Notify any registered observers that the itemCount items starting at
-         * position positionStart have changed. Equivalent to calling
-         * notifyItemRangeChanged(position, itemCount, null);.
-         *
-         * This is an item change event, not a structural change event. It indicates
-         * that any reflection of the data in the given position range is out of date
-         * and should be updated. The items in the given range retain the same identity.
-         */
-        notifyItemRangeChanged(position, getItemCount());
     }
 
     public void addItem(int position, Inbox item) {
         mInbox.add(position, item);
         notifyItemInserted(position);
     }
-
 
     @NonNull
     @Override
