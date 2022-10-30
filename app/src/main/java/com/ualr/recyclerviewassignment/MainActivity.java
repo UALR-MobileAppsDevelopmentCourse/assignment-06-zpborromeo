@@ -22,7 +22,7 @@ import java.util.List;
 //  Implement a new method to delete the corresponding item in the list
 // TODO 08. Create a new method to add a new item on the top of the list. Use the DataGenerator class to create the new item to be added.
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterListBasic.OnItemClickListener {
 
     private static final int DEFAULT_POS = 0;
 
