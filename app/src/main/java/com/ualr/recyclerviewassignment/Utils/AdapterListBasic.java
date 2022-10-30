@@ -109,12 +109,12 @@ public class AdapterListBasic extends RecyclerView.Adapter{
     }
 
     public class InboxViewHolder extends RecyclerView.ViewHolder {
-        TextView mailIcon;
-        TextView mailSender;
-        TextView mailTitle;
-        TextView mailContent;
-        TextView mailTimeSent;
-        View mainInboxView;
+        public TextView mailIcon;
+        public TextView mailSender;
+        public TextView mailTitle;
+        public TextView mailContent;
+        public TextView mailTimeSent;
+        public View mainInboxView;
 
         public InboxViewHolder(View itemView) {
             super(itemView);

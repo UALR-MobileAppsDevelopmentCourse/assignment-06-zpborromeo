@@ -27,33 +27,33 @@ public class MainActivity extends AppCompatActivity {
     private static final int DEFAULT_POS = 0;
 
     private FloatingActionButton mFAB;
-    private List<Inbox> mainDataSource;
-    private ActivityListMultiSelectionBinding mainBinding;
+    //private List<Inbox> mainDataSource;
+    //private ActivityListMultiSelectionBinding mainBinding;
     private AdapterListBasic mainAdapter;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainBinding = ActivityListMultiSelectionBinding.inflate(getLayoutInflater());
-        setContentView(mainBinding.getRoot());
+        setContentView(R.layout.activity_list_multi_selection);
         initComponent();
 
     }
 
     private void initComponent() {
         // TODO 01. Generate the item list to be displayed using the DataGenerator class
-        mainDataSource = DataGenerator.getInboxData(this);
-        mainDataSource.addAll(DataGenerator.getInboxData(this));
+        List<Inbox> tempInbox = DataGenerator.getInboxData(this);
+        tempInbox.addAll(DataGenerator.getInboxData(this));
+        RecyclerView mainRecyclerView = findViewById(R.id.MainRecyclerView);
 
         // TODO 03. Do the setup of a new RecyclerView instance to display the item list properly
         // TODO 04. Define the layout of each item in the list
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
-        mainAdapter = new AdapterListBasic(MainActivity.this, mainDataSource);
-        //mainAdapter.setOnItemClickListener(this);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        mainAdapter = new AdapterListBasic(this, tempInbox);
+        mainAdapter.setOnItemClickListener(this);
 
-        mainBinding.MainRecyclerView.setLayoutManager(layoutManager);
-        mainBinding.MainRecyclerView.setAdapter(mainAdapter);
+        mainRecyclerView.setLayoutManager(layoutManager);
+        mainRecyclerView.setAdapter(mainAdapter);
 
         // TODO 09. Create a new instance of the created Adapter class and bind it to the RecyclerView instance created in step 03
         mFAB = findViewById(R.id.fab);
@@ -63,12 +63,12 @@ public class MainActivity extends AppCompatActivity {
                 //TODO 10. Invoke the method created to a new item to the top of the list so it's triggered when the user taps the Floating Action Button
                 Inbox randomEmail = DataGenerator.getRandomInboxItem(getApplicationContext());
                 mainAdapter.addItem(DEFAULT_POS, randomEmail);
-                mainBinding.MainRecyclerView.scrollToPosition(DEFAULT_POS);
+                mainRecyclerView.scrollToPosition(DEFAULT_POS);
             }
         });
     }
 
-    //@Override
+    @Override
     public void onItemClick(View view, Inbox item, int position) {
         mainAdapter.clearSelected();
         item.toggleSelection();
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // TODO 05: Invoke the removeItem method
-    //@Override
+    @Override
     public void onIconClick(View view, Inbox item, int position) {
         if (item.isSelected()) {
             mainAdapter.removeItem(position);
