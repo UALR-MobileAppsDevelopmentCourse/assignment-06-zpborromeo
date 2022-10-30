@@ -1,11 +1,12 @@
 package com.ualr.recyclerviewassignment.Utils;
 
 import android.content.Context;
-import android.text.Layout;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,13 +24,8 @@ import java.util.List;
  */
 
 public class AdapterListBasic extends RecyclerView.Adapter{
-
-    private static final int PERSON_VIEW = 0;
-    private static final int HEADER_VIEW = 1;
-
     private List<Inbox> mInbox;
     private Context mContext;
-
     private OnItemClickListener mOnItemClickListener;
 
     public AdapterListBasic(Context context, List<Inbox> items) {
@@ -38,18 +34,13 @@ public class AdapterListBasic extends RecyclerView.Adapter{
     }
 
     public interface OnItemClickListener {
-        void onItemClick(int position);
+        void onItemClick(View view, Inbox inbox, int position);
+
+        void onIconClick(View view, Inbox inbox, int position);
     }
 
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
         this.mOnItemClickListener = mItemClickListener;
-    }
-
-    public void removeItem(int position) {
-        if (position >= mInbox.size()){
-            return;
-        }
-        mInbox.remove(position);
     }
 
     public void addItem(int position, Inbox item) {
@@ -57,10 +48,30 @@ public class AdapterListBasic extends RecyclerView.Adapter{
         notifyItemInserted(position);
     }
 
+    public void removeItem(int position) {
+        if (position >= mInbox.size()){
+            return;
+        }
+        mInbox.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void clearSelected(){
+        for (Inbox email : mInbox){
+            email.setSelected(false);
+        }
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemCount() {
+        return this.mInbox.size();
+    }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_list_multi_selection, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.inbox_item, parent, false);
         return new InboxViewHolder(view);
     }
 
@@ -72,11 +83,29 @@ public class AdapterListBasic extends RecyclerView.Adapter{
         vh.mailTitle.setText(mInbox.get(position).getEmail());
         vh.mailContent.setText(mInbox.get(position).getMessage());
         vh.mailTimeSent.setText(mInbox.get(position).getDate());
-    }
 
-    @Override
-    public int getItemCount() {
-        return this.mInbox.size();
+        int mailSelectedColor = mContext.getResources().getColor(R.color.grey_20);
+        int iconSelectedColor = mContext.getResources().getColor(R.color.colorAccent);
+        int iconDefaultColor = mContext.getResources().getColor(R.color.colorPrimary);
+
+        Drawable defaultIcon = mContext.getDrawable(R.drawable.shape_circle);
+        Drawable deleteIcon = mContext.getDrawable(R.drawable.ic_delete_24px);
+        Drawable selectedIcon = mContext.getDrawable(R.drawable.shape_circle);
+        selectedIcon.setBounds(0, 0, 24, 24);
+        defaultIcon.mutate().setColorFilter(iconDefaultColor, PorterDuff.Mode.SRC_IN);
+        selectedIcon.mutate().setColorFilter(iconSelectedColor, PorterDuff.Mode.SRC_IN);
+
+        Inbox mainInbox = mInbox.get(position);
+
+        if (mainInbox.isSelected()){
+            vh.mainInboxView.setBackgroundColor(mailSelectedColor);
+            vh.mailIcon.setBackground(selectedIcon);
+            vh.mailIcon.setCompoundDrawablesRelativeWithIntrinsicBounds(deleteIcon, null, null, null);
+        }else{
+            vh.mainInboxView.setBackgroundColor(Color.TRANSPARENT);
+            vh.mailIcon.setBackground(defaultIcon);
+            vh.mailIcon.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, null, null);
+        }
     }
 
     public class InboxViewHolder extends RecyclerView.ViewHolder {
@@ -85,8 +114,9 @@ public class AdapterListBasic extends RecyclerView.Adapter{
         TextView mailTitle;
         TextView mailContent;
         TextView mailTimeSent;
+        View mainInboxView;
 
-        public InboxViewHolder(@NonNull View itemView) {
+        public InboxViewHolder(View itemView) {
             super(itemView);
 
             mailIcon = itemView.findViewById(R.id.tvIcon);
@@ -94,6 +124,20 @@ public class AdapterListBasic extends RecyclerView.Adapter{
             mailTitle = itemView.findViewById(R.id.emailTitle);
             mailContent = itemView.findViewById(R.id.emailContent);
             mailTimeSent = itemView.findViewById(R.id.emailTimeSent);
+            mainInboxView = itemView.findViewById(R.id.inboxLayout);
+
+            mailIcon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mOnItemClickListener.onIconClick(view, mInbox.get(getLayoutPosition()), getLayoutPosition());
+                }
+            });
+            mainInboxView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mOnItemClickListener.onItemClick(view, mInbox.get(getLayoutPosition()), getLayoutPosition());
+                }
+            });
         }
     }
 
