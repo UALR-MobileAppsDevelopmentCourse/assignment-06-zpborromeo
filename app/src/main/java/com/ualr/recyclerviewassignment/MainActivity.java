@@ -48,9 +48,9 @@ public class MainActivity extends AppCompatActivity {
 
         // TODO 03. Do the setup of a new RecyclerView instance to display the item list properly
         // TODO 04. Define the layout of each item in the list
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        mainAdapter = new AdapterListBasic(this, mainDataSource);
-        mainAdapter.setOnItemClickListener((AdapterListBasic.OnItemClickListener) this);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
+        mainAdapter = new AdapterListBasic(MainActivity.this, mainDataSource);
+        //mainAdapter.setOnItemClickListener(this);
 
         mainBinding.MainRecyclerView.setLayoutManager(layoutManager);
         mainBinding.MainRecyclerView.setAdapter(mainAdapter);
@@ -67,7 +67,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 
     //@Override
     public void onItemClick(View view, Inbox item, int position) {
